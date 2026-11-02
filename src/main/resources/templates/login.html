@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign in · SEMS</title>
+    <link rel="stylesheet" th:href="@{/css/sems.css}">
+</head>
+<body>
+<main class="narrow">
+    <h1>SEMS</h1>
+    <p class="lede">Sign in to the Secure Employee Management System.</p>
+    <p class="message error" th:if="${param.error}">Invalid username or password.</p>
+    <p class="message" th:if="${param.logout}">You have been signed out.</p>
+    <form class="stack" th:action="@{/login}" method="post">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <button type="submit">Sign in</button>
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Home · SEMS</title>
+    <link rel="stylesheet" th:href="@{/css/sems.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main>
+    <h1>Home</h1>
+    <p>Signed in as <strong sec:authentication="name">user</strong>.</p>
+</main>
+</body>
+</html>

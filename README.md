@@ -1,0 +1,147 @@
+# Secure Employee Management System (SEMS)
+
+SEMS is a local Java web application for managing employee accounts and leave. The project runs from one codebase on macOS and Windows. Sign-in and role checks are in place. Employee records, leave decisions, and audit logging come in later modules.
+
+The working directory for every command below is the project root, the folder that contains `pom.xml`.
+
+## Current status
+
+- macOS: verified on November 2, 2026 with Temurin 21.0.4. `./mvnw test` passed (`Tests run: 9, Failures: 0`). Sign-in, sign-out, and a forbidden administrator page were checked in the browser.
+- Do not commit `data/sems.db`, anything else under `data/`, or `target/`. Those are local runtime and build files.
+- Windows: unverified. A Windows 10 or 11 machine still needs to run the commands in the Windows section.
+
+## Prerequisites
+
+- JDK 21 (Eclipse Temurin 21 is the setup used here)
+- Git
+- Cursor or IntelliJ IDEA
+- No separate Maven install. The Maven Wrapper (`mvnw` / `mvnw.cmd`) downloads Maven 3.9.16 on the first build.
+
+Java source, `schema.sql`, and configuration are the same on both operating systems. Do not add Windows-only or macOS-only application code.
+
+## Windows setup
+
+These steps are written for Windows 10 and 11 using PowerShell. They have not been run yet.
+
+1. Install Eclipse Temurin 21 (Windows x64) from [Adoptium](https://adoptium.net/).
+2. Set `JAVA_HOME` to the Temurin 21 directory, for example `C:\Program Files\Eclipse Adoptium\jdk-21.0.4.7-hotspot`. Add `%JAVA_HOME%\bin` to `Path`.
+3. Open a new PowerShell window and check Java:
+
+   ```powershell
+   java -version
+   echo $env:JAVA_HOME
+   ```
+
+   `java -version` should report version 21.
+
+4. Install [Git for Windows](https://git-scm.com/download/win) and confirm `git --version` works in PowerShell.
+5. Clone the repository and move into the project root:
+
+   ```powershell
+   git clone <repository-url>
+   cd Secure-Employee-Management-System-SEMS-
+   ```
+
+6. Open that folder in Cursor, or in IntelliJ IDEA and import it as a Maven project. Set the project SDK to Java 21.
+7. No environment variables are required. The database file defaults to `data\sems.db` under the project root. To use another file for the current PowerShell window only:
+
+   ```powershell
+   $env:SEMS_DB_PATH = "D:\sems-data\sems.db"
+   ```
+
+8. From the project root:
+
+   ```powershell
+   .\mvnw.cmd -version
+   .\mvnw.cmd clean test
+   .\mvnw.cmd spring-boot:run
+   ```
+
+9. Open `http://localhost:8080/login` in a browser.
+10. Tests are `.\mvnw.cmd clean test`. The application does not need to be running.
+
+## macOS setup
+
+These steps cover Apple Silicon and Intel Macs. The shell is zsh. They were run on this machine with Temurin 21.0.4.
+
+1. Install Temurin 21 with `brew install --cask temurin@21`, or install the macOS package from [Adoptium](https://adoptium.net/) that matches the chip.
+2. Point `JAVA_HOME` at JDK 21. Add this to `~/.zshrc` if `java -version` does not already report 21:
+
+   ```zsh
+   export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+   export PATH="$JAVA_HOME/bin:$PATH"
+   ```
+
+   Open a new terminal and check:
+
+   ```zsh
+   java -version
+   echo "$JAVA_HOME"
+   ```
+
+3. Install Git with Xcode Command Line Tools, or with `brew install git`. Confirm `git --version`.
+4. Clone the repository and move into the project root:
+
+   ```zsh
+   git clone <repository-url>
+   cd Secure-Employee-Management-System-SEMS-
+   ```
+
+5. If Git did not keep the executable bit on the wrapper, run `chmod +x mvnw` once.
+6. Open the folder in Cursor or IntelliJ IDEA. Set the project SDK to Java 21.
+7. No environment variables are required. The database file defaults to `data/sems.db` under the project root. To use another file for the current terminal only:
+
+   ```zsh
+   export SEMS_DB_PATH="$HOME/sems-data/sems.db"
+   ```
+
+8. From the project root:
+
+   ```zsh
+   ./mvnw -version
+   ./mvnw clean test
+   ./mvnw spring-boot:run
+   ```
+
+9. Open `http://localhost:8080/login` in a browser.
+10. Tests are `./mvnw clean test`. The application does not need to be running.
+
+## Local demo accounts
+
+`./mvnw spring-boot:run` loads the `dev` profile and creates two accounts if they are not already in the local database. Both use the same class demo password: `sems-demo-1`.
+
+| Username | Role |
+| --- | --- |
+| `admin` | Administrator |
+| `manager` | Manager |
+
+This password is for the local class database only. Do not reuse it for any personal account, and do not replace it in Git with a password you use anywhere else. The database stores a BCrypt hash in `src/main/resources/data-dev.sql`, not the password itself. Tests do not use these accounts. They create their own users in a temporary database.
+
+A browser request to `http://localhost:8080` redirects to `/login`. A wrong password shows "Invalid username or password." An inactive account shows that same message. After sign-in, the home page shows the username. Log out with the button in the header. An account that opens an administrator page without that role sees "You do not have access to that page."
+
+## Configuration
+
+Settings live in `src/main/resources/application.properties`.
+
+- Server port: `8080`
+- Database URL: `jdbc:sqlite:${SEMS_DB_PATH:./data/sems.db}`
+- The application creates the database parent directory on startup. Run Maven from the project root so `./data/sems.db` is created inside the project.
+- Schema comes from `src/main/resources/schema.sql`. Hibernate does not create or alter tables.
+- SQLite foreign keys are turned on for each connection with `PRAGMA foreign_keys=ON`.
+- Local database files matching `data/*.db` are gitignored. Each developer has a private database.
+- If you change `schema.sql` during development, stop the app and delete your local `sems.db`, then start again. `CREATE TABLE IF NOT EXISTS` will not modify a table that already exists.
+- `./mvnw spring-boot:run` turns on the `dev` profile, which loads `data-dev.sql`. Automated tests do not load that file.
+- Do not commit `data/sems.db`, `target/`, or a `.env` file. Do not put a personal password in `data-dev.sql` or this README.
+
+## Tests
+
+Tests use a temporary SQLite file, not `data/sems.db`. They cover database startup, password hashing, valid and invalid sign-in, inactive accounts, and the administrator, manager, and employee page rules.
+
+## Layout
+
+- `src/main/java/edu/sems/` — application code
+- `src/main/resources/schema.sql` — tables `employees`, `users`, `leave_requests`, and `audit_events`
+- `src/test/java/edu/sems/` — JUnit 5 tests
+- `data/` — created at startup, not committed
+
+The next module is employee creation, update, and deactivation.
