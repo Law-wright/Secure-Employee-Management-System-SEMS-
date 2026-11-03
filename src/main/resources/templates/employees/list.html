@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employees · SEMS</title>
+    <link rel="stylesheet" th:href="@{/css/sems.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="wide">
+    <div class="page-heading">
+        <div>
+            <h1>Employees</h1>
+            <p>View and maintain employee accounts.</p>
+        </div>
+        <a class="button-link" th:href="@{/employees/new}">New employee</a>
+    </div>
+    <p class="message" th:if="${message}" th:text="${message}"></p>
+    <table>
+        <thead>
+        <tr>
+            <th>Number</th>
+            <th>Name</th>
+            <th>Job title</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employee : ${employees}">
+            <td th:text="${employee.employeeNumber}"></td>
+            <td th:text="${employee.firstName + ' ' + employee.lastName}"></td>
+            <td th:text="${employee.jobTitle}"></td>
+            <td th:text="${employee.status}"></td>
+            <td><a th:href="@{/employees/{id}(id=${employee.id})}">View</a></td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(employees)}">
+            <td colspan="5">No employees found.</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

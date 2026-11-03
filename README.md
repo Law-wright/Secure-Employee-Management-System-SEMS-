@@ -1,12 +1,12 @@
 # Secure Employee Management System (SEMS)
 
-SEMS is a local Java web application for managing employee accounts and leave. The project runs from one codebase on macOS and Windows. Sign-in and role checks are in place. Employee records, leave decisions, and audit logging come in later modules.
+SEMS is a local Java web application for managing employee accounts and leave. The project runs from one codebase on macOS and Windows. Sign-in, role checks, and administrator employee management are in place. Leave decisions and audit logging come in later modules.
 
 The working directory for every command below is the project root, the folder that contains `pom.xml`.
 
 ## Current status
 
-- macOS: verified on November 2, 2026 with Temurin 21.0.4. `./mvnw test` passed (`Tests run: 9, Failures: 0`). Sign-in, sign-out, and a forbidden administrator page were checked in the browser.
+- macOS: verified on November 2, 2026 with Temurin 21.0.4. `./mvnw clean test` passed (`Tests run: 14, Failures: 0`). Sign-in, sign-out, employee management, and a forbidden administrator page were checked in the browser.
 - Do not commit `data/sems.db`, anything else under `data/`, or `target/`. Those are local runtime and build files.
 - Windows: unverified. A Windows 10 or 11 machine still needs to run the commands in the Windows section.
 
@@ -135,7 +135,7 @@ Settings live in `src/main/resources/application.properties`.
 
 ## Tests
 
-Tests use a temporary SQLite file, not `data/sems.db`. They cover database startup, password hashing, valid and invalid sign-in, inactive accounts, and the administrator, manager, and employee page rules.
+Tests use a temporary SQLite file, not `data/sems.db`. They cover database startup, password hashing, valid and invalid sign-in, inactive accounts, role rules, employee creation and validation, updates, and deactivation.
 
 ## Layout
 
@@ -144,4 +144,4 @@ Tests use a temporary SQLite file, not `data/sems.db`. They cover database start
 - `src/test/java/edu/sems/` — JUnit 5 tests
 - `data/` — created at startup, not committed
 
-The next module is employee creation, update, and deactivation.
+The next module is employee leave submission and manager approval or rejection.

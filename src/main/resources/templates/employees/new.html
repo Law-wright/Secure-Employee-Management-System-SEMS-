@@ -9,7 +9,48 @@
 <header th:replace="~{fragments/header :: header}"></header>
 <main>
     <h1>New employee</h1>
-    <p>Administrators can open this page. The employee form comes in the next module.</p>
+    <p>Create the employee record and sign-in account together.</p>
+    <form th:action="@{/employees}" th:object="${employeeForm}" method="post">
+        <div class="message error" th:if="${#fields.hasGlobalErrors()}"
+             th:each="error : ${#fields.globalErrors()}" th:text="${error}"></div>
+
+        <label for="employeeNumber">Employee number</label>
+        <input id="employeeNumber" th:field="*{employeeNumber}" maxlength="50" required>
+        <span class="field-error" th:errors="*{employeeNumber}"></span>
+
+        <label for="firstName">First name</label>
+        <input id="firstName" th:field="*{firstName}" maxlength="50" required>
+        <span class="field-error" th:errors="*{firstName}"></span>
+
+        <label for="lastName">Last name</label>
+        <input id="lastName" th:field="*{lastName}" maxlength="50" required>
+        <span class="field-error" th:errors="*{lastName}"></span>
+
+        <label for="email">Email</label>
+        <input id="email" type="email" th:field="*{email}" maxlength="100" required>
+        <span class="field-error" th:errors="*{email}"></span>
+
+        <label for="jobTitle">Job title</label>
+        <input id="jobTitle" th:field="*{jobTitle}" maxlength="80" required>
+        <span class="field-error" th:errors="*{jobTitle}"></span>
+
+        <label for="username">Username</label>
+        <input id="username" th:field="*{username}" maxlength="50" autocomplete="off" required>
+        <span class="field-error" th:errors="*{username}"></span>
+
+        <label for="password">Initial password</label>
+        <input id="password" type="password" th:field="*{password}" autocomplete="new-password" required>
+        <span class="field-error" th:errors="*{password}"></span>
+
+        <label for="role">Role</label>
+        <select id="role" th:field="*{role}">
+            <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
+        </select>
+        <span class="field-error" th:errors="*{role}"></span>
+
+        <button type="submit">Create employee</button>
+        <a class="secondary-link" th:href="@{/employees}">Cancel</a>
+    </form>
 </main>
 </body>
 </html>

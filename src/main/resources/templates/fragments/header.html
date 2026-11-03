@@ -5,7 +5,7 @@
     <a class="brand" th:href="@{/}">SEMS</a>
     <nav sec:authorize="isAuthenticated()">
         <a th:href="@{/profile}">Profile</a>
-        <a sec:authorize="hasRole('ADMIN')" th:href="@{/employees/new}">Employees</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/employees}">Employees</a>
         <a sec:authorize="hasRole('MANAGER')" th:href="@{/leave/review}">Leave review</a>
         <a sec:authorize="hasRole('ADMIN')" th:href="@{/audit}">Audit log</a>
         <form th:action="@{/logout}" method="post">

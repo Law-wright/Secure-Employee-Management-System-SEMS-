@@ -76,4 +76,8 @@ public class UserAccount {
     public Employee getEmployee() {
         return employee;
     }
+
+    public void deactivate() {
+        this.active = false;
+    }
 }

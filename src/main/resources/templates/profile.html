@@ -10,7 +10,18 @@
 <main>
     <h1>Profile</h1>
     <p>Signed in as <strong sec:authentication="name">user</strong>.</p>
-    <p>Employee details will appear on this page.</p>
+    <dl th:if="${employee}">
+        <dt>Employee number</dt>
+        <dd th:text="${employee.employeeNumber}"></dd>
+        <dt>Name</dt>
+        <dd th:text="${employee.firstName + ' ' + employee.lastName}"></dd>
+        <dt>Email</dt>
+        <dd th:text="${employee.email}"></dd>
+        <dt>Job title</dt>
+        <dd th:text="${employee.jobTitle}"></dd>
+        <dt>Status</dt>
+        <dd th:text="${employee.status}"></dd>
+    </dl>
 </main>
 </body>
 </html>

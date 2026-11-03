@@ -86,4 +86,25 @@ public class Employee {
     public EmployeeStatus getStatus() {
         return status;
     }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void update(String firstName, String lastName, String email, String jobTitle) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.jobTitle = jobTitle;
+        this.updatedAt = Instant.now().toString();
+    }
+
+    public void deactivate() {
+        this.status = EmployeeStatus.INACTIVE;
+        this.updatedAt = Instant.now().toString();
+    }
 }

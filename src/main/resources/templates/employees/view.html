@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee · SEMS</title>
+    <link rel="stylesheet" th:href="@{/css/sems.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main>
+    <p><a th:href="@{/employees}">← All employees</a></p>
+    <h1 th:text="${employee.firstName + ' ' + employee.lastName}"></h1>
+    <p class="message" th:if="${message}" th:text="${message}"></p>
+    <dl>
+        <dt>Employee number</dt>
+        <dd th:text="${employee.employeeNumber}"></dd>
+        <dt>Email</dt>
+        <dd th:text="${employee.email}"></dd>
+        <dt>Job title</dt>
+        <dd th:text="${employee.jobTitle}"></dd>
+        <dt>Status</dt>
+        <dd th:text="${employee.status}"></dd>
+    </dl>
+    <a class="button-link" th:href="@{/employees/{id}/edit(id=${employee.id})}">Edit employee</a>
+    <form class="inline-form" th:if="${employee.status.name() == 'ACTIVE'}"
+          th:action="@{/employees/{id}/deactivate(id=${employee.id})}" method="post">
+        <button class="danger" type="submit">Deactivate employee</button>
+    </form>
+</main>
+</body>
+</html>
