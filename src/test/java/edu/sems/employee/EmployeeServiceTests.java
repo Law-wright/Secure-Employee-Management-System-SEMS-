@@ -4,6 +4,7 @@ import edu.sems.domain.Employee;
 import edu.sems.domain.EmployeeStatus;
 import edu.sems.domain.Role;
 import edu.sems.domain.UserAccount;
+import edu.sems.repository.AuditEventRepository;
 import edu.sems.repository.EmployeeRepository;
 import edu.sems.repository.UserAccountRepository;
 import edu.sems.service.EmployeeService;
@@ -55,6 +56,9 @@ class EmployeeServiceTests {
     private UserAccountRepository users;
 
     @Autowired
+    private AuditEventRepository auditEvents;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -62,6 +66,7 @@ class EmployeeServiceTests {
 
     @BeforeEach
     void cleanDatabase() {
+        auditEvents.deleteAll();
         users.deleteAll();
         employees.deleteAll();
     }

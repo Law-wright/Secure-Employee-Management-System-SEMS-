@@ -1,5 +1,6 @@
 package edu.sems.config;
 
+import edu.sems.security.AuditAccessDeniedHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -15,7 +16,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http, AuditAccessDeniedHandler auditAccessDeniedHandler)
+            throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/css/**", "/access-denied").permitAll()
@@ -32,7 +34,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"))
-                .exceptionHandling(handler -> handler.accessDeniedPage("/access-denied"));
+                .exceptionHandling(handler -> handler.accessDeniedHandler(auditAccessDeniedHandler));
         return http.build();
     }
 

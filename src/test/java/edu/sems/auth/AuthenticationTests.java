@@ -1,6 +1,7 @@
 package edu.sems.auth;
 
 import edu.sems.domain.Role;
+import edu.sems.repository.AuditEventRepository;
 import edu.sems.repository.EmployeeRepository;
 import edu.sems.repository.UserAccountRepository;
 import edu.sems.support.AccountFixtures;
@@ -50,10 +51,14 @@ class AuthenticationTests {
     private UserAccountRepository users;
 
     @Autowired
+    private AuditEventRepository auditEvents;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void insertAccounts() {
+        auditEvents.deleteAll();
         users.deleteAll();
         employees.deleteAll();
         AccountFixtures.saveUser(employees, users, passwordEncoder, "E1001", "ada", Role.EMPLOYEE, true);

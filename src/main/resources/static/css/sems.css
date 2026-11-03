@@ -84,7 +84,8 @@ label {
 }
 
 input,
-select {
+select,
+textarea {
     width: 100%;
     margin-top: 0.25rem;
     padding: 0.55rem 0.65rem;
@@ -92,6 +93,10 @@ select {
     border-radius: 4px;
     font: inherit;
     background: white;
+}
+
+textarea {
+    resize: vertical;
 }
 
 button {
@@ -163,6 +168,17 @@ td {
     padding: 0.65rem;
     border-bottom: 1px solid var(--line);
     text-align: left;
+    vertical-align: top;
+}
+
+td.details {
+    max-width: 22rem;
+    word-break: break-word;
+}
+
+td.failure {
+    color: var(--danger);
+    font-weight: 600;
 }
 
 dt {
@@ -178,7 +194,11 @@ dd {
 
 .inline-form {
     display: inline-block;
-    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.inline-form button {
+    margin-top: 0;
 }
 
 button.danger {

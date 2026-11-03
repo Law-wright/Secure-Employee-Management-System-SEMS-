@@ -1,5 +1,8 @@
 package edu.sems.service;
 
+import edu.sems.domain.AuditAction;
+import edu.sems.domain.AuditEventType;
+import edu.sems.domain.AuditOutcome;
 import edu.sems.domain.Employee;
 import edu.sems.domain.EmployeeStatus;
 import edu.sems.domain.Role;
@@ -24,14 +27,17 @@ public class EmployeeService {
     private final EmployeeRepository employees;
     private final UserAccountRepository users;
     private final PasswordEncoder passwordEncoder;
+    private final AuditService auditService;
 
     public EmployeeService(
             EmployeeRepository employees,
             UserAccountRepository users,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            AuditService auditService) {
         this.employees = employees;
         this.users = users;
         this.passwordEncoder = passwordEncoder;
+        this.auditService = auditService;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -86,6 +92,11 @@ public class EmployeeService {
                 role,
                 true,
                 employee));
+        auditService.recordCurrentUser(
+                AuditEventType.EMPLOYEE,
+                AuditAction.CREATE,
+                AuditOutcome.SUCCESS,
+                "Created employee " + employee.getEmployeeNumber());
         return employee;
     }
 
@@ -101,6 +112,11 @@ public class EmployeeService {
             throw new EmployeeValidationException("email", "Email is already in use.");
         }
         employee.update(cleanFirstName, cleanLastName, cleanEmail, cleanJobTitle);
+        auditService.recordCurrentUser(
+                AuditEventType.EMPLOYEE,
+                AuditAction.UPDATE,
+                AuditOutcome.SUCCESS,
+                "Updated employee " + employee.getEmployeeNumber());
         return employee;
     }
 
@@ -115,6 +131,11 @@ public class EmployeeService {
                 .orElseThrow(() -> new EmployeeValidationException("employee", "Employee account not found."));
         employee.deactivate();
         user.deactivate();
+        auditService.recordCurrentUser(
+                AuditEventType.EMPLOYEE,
+                AuditAction.DEACTIVATE,
+                AuditOutcome.SUCCESS,
+                "Deactivated employee " + employee.getEmployeeNumber());
     }
 
     private static String required(String value, String field, String label, int maxLength) {

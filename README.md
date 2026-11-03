@@ -1,12 +1,12 @@
 # Secure Employee Management System (SEMS)
 
-SEMS is a local Java web application for managing employee accounts and leave. The project runs from one codebase on macOS and Windows. Sign-in, role checks, and administrator employee management are in place. Leave decisions and audit logging come in later modules.
+SEMS is a local Java web application for managing employee accounts and leave. The project runs from one codebase on macOS and Windows. Sign-in, role checks, administrator employee management, employee leave submission with manager decisions, and an administrator audit log are in place.
 
 The working directory for every command below is the project root, the folder that contains `pom.xml`.
 
 ## Current status
 
-- macOS: verified on November 2, 2026 with Temurin 21.0.4. `./mvnw clean test` passed (`Tests run: 14, Failures: 0`). Sign-in, sign-out, employee management, and a forbidden administrator page were checked in the browser.
+- macOS: verified on November 3, 2026 with Temurin 21.0.4. `./mvnw clean test` passed (`Tests run: 25, Failures: 0`). Sign-in, sign-out, employee management, leave submission, the audit log, and a forbidden administrator page were checked in the browser.
 - Do not commit `data/sems.db`, anything else under `data/`, or `target/`. Those are local runtime and build files.
 - Windows: unverified. A Windows 10 or 11 machine still needs to run the commands in the Windows section.
 
@@ -117,7 +117,7 @@ These steps cover Apple Silicon and Intel Macs. The shell is zsh. They were run 
 
 This password is for the local class database only. Do not reuse it for any personal account, and do not replace it in Git with a password you use anywhere else. The database stores a BCrypt hash in `src/main/resources/data-dev.sql`, not the password itself. Tests do not use these accounts. They create their own users in a temporary database.
 
-A browser request to `http://localhost:8080` redirects to `/login`. A wrong password shows "Invalid username or password." An inactive account shows that same message. After sign-in, the home page shows the username. Log out with the button in the header. An account that opens an administrator page without that role sees "You do not have access to that page."
+A browser request to `http://localhost:8080` redirects to `/login`. A wrong password shows "Invalid username or password." An inactive account shows that same message. After sign-in, the home page shows the username. Log out with the button in the header. An account that opens an administrator page without that role sees "You do not have access to that page." The audit log at `/audit` is administrator-only. It lists sign-in, employee changes, leave decisions, and denied requests. Passwords and session ids are not written there.
 
 ## Configuration
 
@@ -135,7 +135,7 @@ Settings live in `src/main/resources/application.properties`.
 
 ## Tests
 
-Tests use a temporary SQLite file, not `data/sems.db`. They cover database startup, password hashing, valid and invalid sign-in, inactive accounts, role rules, employee creation and validation, updates, and deactivation.
+Tests use a temporary SQLite file, not `data/sems.db`. They cover database startup, password hashing, valid and invalid sign-in, inactive accounts, role rules, employee creation and validation, updates, deactivation, leave submission and date rules, manager decisions, repeated decisions, self-review prevention, forbidden employee approval, and the audit log. The audit tests check a successful sign-in, an employee update, a denied administrator page, and that the recorded row does not contain the password.
 
 ## Layout
 
@@ -144,4 +144,4 @@ Tests use a temporary SQLite file, not `data/sems.db`. They cover database start
 - `src/test/java/edu/sems/` — JUnit 5 tests
 - `data/` — created at startup, not committed
 
-The next module is employee leave submission and manager approval or rejection.
+The next module is the integrated demonstration pass.

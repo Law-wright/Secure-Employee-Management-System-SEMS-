@@ -7,9 +7,34 @@
 </head>
 <body>
 <header th:replace="~{fragments/header :: header}"></header>
-<main>
-    <h1>My leave</h1>
-    <p>Your leave requests will be listed here.</p>
+<main class="wide">
+    <div class="page-heading">
+        <div>
+            <h1>My leave</h1>
+            <p>Track your submitted leave requests.</p>
+        </div>
+        <a class="button-link" th:href="@{/leave/new}">Request leave</a>
+    </div>
+    <p class="message" th:if="${message}" th:text="${message}"></p>
+    <table>
+        <thead>
+        <tr>
+            <th>Dates</th>
+            <th>Reason</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="request : ${leaveRequests}">
+            <td th:text="${request.startDate + ' to ' + request.endDate}"></td>
+            <td th:text="${request.reason}"></td>
+            <td th:text="${request.status}"></td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(leaveRequests)}">
+            <td colspan="3">No leave requests found.</td>
+        </tr>
+        </tbody>
+    </table>
 </main>
 </body>
 </html>

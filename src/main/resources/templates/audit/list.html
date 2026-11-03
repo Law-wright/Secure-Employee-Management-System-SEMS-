@@ -7,9 +7,35 @@
 </head>
 <body>
 <header th:replace="~{fragments/header :: header}"></header>
-<main>
+<main class="wide">
     <h1>Audit log</h1>
-    <p>Administrators can open this page. Recorded events come in the audit module.</p>
+    <p>Sign-in, employee changes, leave decisions, and denied requests. Passwords are not stored here.</p>
+    <table>
+        <thead>
+        <tr>
+            <th>When</th>
+            <th>Actor</th>
+            <th>Type</th>
+            <th>Action</th>
+            <th>Outcome</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="event : ${events}">
+            <td th:text="${event.occurredAt}">2026-11-03T00:00:00Z</td>
+            <td th:text="${event.actorUsername != null ? event.actorUsername : '—'}">admin</td>
+            <td th:text="${event.eventType}">AUTHENTICATION</td>
+            <td th:text="${event.action}">LOGIN</td>
+            <td th:text="${event.outcome}"
+                th:classappend="${event.outcome.name() == 'FAILURE'} ? 'failure' : ''">SUCCESS</td>
+            <td class="details" th:text="${event.details}">Signed in</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(events)}">
+            <td colspan="6">No events recorded.</td>
+        </tr>
+        </tbody>
+    </table>
 </main>
 </body>
 </html>

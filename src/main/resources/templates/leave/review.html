@@ -7,9 +7,39 @@
 </head>
 <body>
 <header th:replace="~{fragments/header :: header}"></header>
-<main>
+<main class="wide">
     <h1>Leave review</h1>
-    <p>Managers can open this page. Approval and rejection come in the leave module.</p>
+    <p>Approve or reject pending employee requests.</p>
+    <p class="message" th:if="${message}" th:text="${message}"></p>
+    <p class="message error" th:if="${error}" th:text="${error}"></p>
+    <table>
+        <thead>
+        <tr>
+            <th>Employee</th>
+            <th>Dates</th>
+            <th>Reason</th>
+            <th>Decision</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="request : ${leaveRequests}">
+            <td th:text="${request.employee.firstName + ' ' + request.employee.lastName}"></td>
+            <td th:text="${request.startDate + ' to ' + request.endDate}"></td>
+            <td th:text="${request.reason}"></td>
+            <td>
+                <form class="inline-form" th:action="@{/leave/review/{id}/approve(id=${request.id})}" method="post">
+                    <button type="submit">Approve</button>
+                </form>
+                <form class="inline-form" th:action="@{/leave/review/{id}/reject(id=${request.id})}" method="post">
+                    <button class="danger" type="submit">Reject</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(leaveRequests)}">
+            <td colspan="4">No pending leave requests.</td>
+        </tr>
+        </tbody>
+    </table>
 </main>
 </body>
 </html>

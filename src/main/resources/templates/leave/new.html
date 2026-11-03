@@ -9,7 +9,26 @@
 <header th:replace="~{fragments/header :: header}"></header>
 <main>
     <h1>Request leave</h1>
-    <p>The leave request form comes in the leave module.</p>
+    <p>Request up to 30 days, starting today or later.</p>
+    <form th:action="@{/leave}" th:object="${leaveForm}" method="post">
+        <div class="message error" th:if="${#fields.hasGlobalErrors()}"
+             th:each="error : ${#fields.globalErrors()}" th:text="${error}"></div>
+
+        <label for="startDate">Start date</label>
+        <input id="startDate" type="date" th:field="*{startDate}" required>
+        <span class="field-error" th:errors="*{startDate}"></span>
+
+        <label for="endDate">End date</label>
+        <input id="endDate" type="date" th:field="*{endDate}" required>
+        <span class="field-error" th:errors="*{endDate}"></span>
+
+        <label for="reason">Reason</label>
+        <textarea id="reason" th:field="*{reason}" maxlength="500" rows="5" required></textarea>
+        <span class="field-error" th:errors="*{reason}"></span>
+
+        <button type="submit">Submit request</button>
+        <a class="secondary-link" th:href="@{/leave/mine}">Cancel</a>
+    </form>
 </main>
 </body>
 </html>
