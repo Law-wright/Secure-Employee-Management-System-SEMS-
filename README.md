@@ -6,7 +6,7 @@ The working directory for every command below is the project root, the folder th
 
 ## Current status
 
-- macOS: verified on November 3, 2026 with Temurin 21.0.4. `./mvnw clean test` passed (`Tests run: 25, Failures: 0`). Sign-in, sign-out, employee management, leave submission, the audit log, and a forbidden administrator page were checked in the browser.
+- macOS: verified on November 3, 2026 with Temurin 21.0.4. `./mvnw clean test` passed (`Tests run: 25, Failures: 0`), and the full 16-step live demonstration script was completed end-to-end in the browser against a fresh database.
 - Do not commit `data/sems.db`, anything else under `data/`, or `target/`. Those are local runtime and build files.
 - Windows: unverified. A Windows 10 or 11 machine still needs to run the commands in the Windows section.
 
@@ -135,13 +135,14 @@ Settings live in `src/main/resources/application.properties`.
 
 ## Tests
 
-Tests use a temporary SQLite file, not `data/sems.db`. They cover database startup, password hashing, valid and invalid sign-in, inactive accounts, role rules, employee creation and validation, updates, deactivation, leave submission and date rules, manager decisions, repeated decisions, self-review prevention, forbidden employee approval, and the audit log. The audit tests check a successful sign-in, an employee update, a denied administrator page, and that the recorded row does not contain the password.
+Tests use a temporary SQLite file, not `data/sems.db`. They cover database startup and foreign-key enforcement, password hashing, valid and invalid sign-in, inactive accounts, role rules, employee creation and validation, updates, deactivation, leave submission and date rules, manager decisions, repeated decisions, self-review prevention, forbidden employee approval, and the audit log. The audit tests check a successful sign-in, an employee update, a denied administrator page, and that the recorded row does not contain the password. The Surefire summary is saved in `docs/testing/surefire-summary.txt`.
 
 ## Layout
 
 - `src/main/java/edu/sems/` — application code
 - `src/main/resources/schema.sql` — tables `employees`, `users`, `leave_requests`, and `audit_events`
 - `src/test/java/edu/sems/` — JUnit 5 tests
+- `docs/testing/` — recorded Surefire test summary
 - `data/` — created at startup, not committed
 
-The next module is the integrated demonstration pass.
+The next phase is documentation, UML diagrams, and presentation rehearsal.

@@ -12,11 +12,13 @@ import javax.sql.DataSource;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class SemsApplicationTests {
@@ -55,6 +57,10 @@ class SemsApplicationTests {
                 }
                 assertThat(names).contains("audit_events", "employees", "leave_requests", "users");
             }
+            assertThatThrownBy(() -> statement.executeUpdate(
+                    "INSERT INTO leave_requests (employee_id, start_date, end_date, reason, status, created_at) "
+                            + "VALUES (999999, '2026-11-10', '2026-11-11', 'Bogus employee', 'PENDING', '2026-11-03T00:00:00Z')"))
+                    .isInstanceOf(SQLException.class);
         }
     }
 }

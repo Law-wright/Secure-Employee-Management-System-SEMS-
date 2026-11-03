@@ -27,8 +27,11 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -155,7 +158,12 @@ class LeaveRequestServiceTests {
         LeaveRequest request = pendingRequest(employee);
 
         mockMvc.perform(post("/leave/review/{id}/approve", request.getId()).with(csrf()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden())
+                .andExpect(forwardedUrl("/access-denied"));
+
+        mockMvc.perform(post("/access-denied").with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("You do not have access to that page.")));
 
         assertThat(leaveRequests.findById(request.getId()).orElseThrow().getStatus())
                 .isEqualTo(LeaveStatus.PENDING);
