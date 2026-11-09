@@ -9,14 +9,19 @@ import edu.sems.domain.UserAccount;
 import edu.sems.repository.AuditEventRepository;
 import edu.sems.repository.EmployeeRepository;
 import edu.sems.repository.UserAccountRepository;
+import edu.sems.service.AuditService;
 import edu.sems.service.EmployeeService;
 import edu.sems.support.AccountFixtures;
+import edu.sems.web.AuditTimestamps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -63,6 +68,12 @@ class AuditTests {
     private EmployeeService employeeService;
 
     @Autowired
+    private AuditService auditService;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @BeforeEach
@@ -96,8 +107,9 @@ class AuditTests {
         assertThat(login.getDetails()).isEqualTo("Signed in");
         assertThat(rowText(login))
                 .doesNotContain(AccountFixtures.PASSWORD)
-                .doesNotContain(passwordHash)
-                .doesNotContain(sessionId);
+                .doesNotContain(passwordHash);
+        assertThat(login.getDetails()).doesNotContain(sessionId);
+        assertThat(login.getActorUsername()).doesNotContain(sessionId);
     }
 
     @Test
@@ -145,11 +157,56 @@ class AuditTests {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    void listedEvents_areNewestFirst_whenInsertedOutOfOrder() throws Exception {
+        insertEvent("2026-07-15T17:00:00Z", "newest");
+        insertEvent("2026-01-15T18:00:00Z", "oldest");
+        insertEvent("2026-01-15T18:00:00Z", "tie");
+
+        List<AuditEvent> ordered = auditService.findAll();
+
+        assertThat(ordered).extracting(AuditEvent::getDetails).containsExactly("newest", "tie", "oldest");
+        assertThat(ordered).extracting(AuditEvent::getOccurredAt).containsExactly(
+                "2026-07-15T17:00:00Z",
+                "2026-01-15T18:00:00Z",
+                "2026-01-15T18:00:00Z");
+        assertThat(ordered.get(1).getId()).isGreaterThan(ordered.get(2).getId());
+        assertThat(ordered.get(0).getId()).isLessThan(ordered.get(2).getId());
+
+        var firstPage = auditService.findPage(PageRequest.of(0, 2, Sort.by(Sort.Direction.ASC, "id")));
+        var secondPage = auditService.findPage(PageRequest.of(1, 2, Sort.by(Sort.Direction.ASC, "occurredAt")));
+        assertThat(firstPage.getContent()).extracting(AuditEvent::getDetails).containsExactly("newest", "tie");
+        assertThat(secondPage.getContent()).extracting(AuditEvent::getDetails).containsExactly("oldest");
+
+        String page = mockMvc.perform(get("/audit"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        int oldest = page.indexOf(AuditTimestamps.format("2026-01-15T18:00:00Z"));
+        int newest = page.indexOf(AuditTimestamps.format("2026-07-15T17:00:00Z"));
+        assertThat(newest).isGreaterThanOrEqualTo(0);
+        assertThat(oldest).isGreaterThan(newest);
+        assertThat(page).doesNotContain("2026-01-15T18:00:00Z");
+        assertThat(page).doesNotContain("2026-07-15T17:00:00Z");
+    }
+
+    @Test
     @WithMockUser(roles = "EMPLOYEE")
     void employee_cannotViewAuditLog() throws Exception {
         mockMvc.perform(get("/audit"))
                 .andExpect(status().isForbidden())
                 .andExpect(forwardedUrl("/access-denied"));
+    }
+
+    private void insertEvent(String occurredAt, String details) {
+        jdbc.update(
+                """
+                INSERT INTO audit_events (occurred_at, event_type, action, outcome, details)
+                VALUES (?, 'AUTHENTICATION', 'LOGIN', 'SUCCESS', ?)
+                """,
+                occurredAt,
+                details);
     }
 
     private static String rowText(AuditEvent event) {

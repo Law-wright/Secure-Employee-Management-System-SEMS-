@@ -12,7 +12,7 @@ The working directory for every command below is the project root, the folder th
 
 ## Prerequisites
 
-- JDK 21 (Eclipse Temurin 21 is the setup used here)
+- JDK 25 (Eclipse Temurin 25 is the setup used here)
 - Git
 - Cursor or IntelliJ IDEA
 - No separate Maven install. The Maven Wrapper (`mvnw` / `mvnw.cmd`) downloads Maven 3.9.16 on the first build.
@@ -23,8 +23,8 @@ Java source, `schema.sql`, and configuration are the same on both operating syst
 
 These steps are written for Windows 10 and 11 using PowerShell. They have not been run yet.
 
-1. Install Eclipse Temurin 21 (Windows x64) from [Adoptium](https://adoptium.net/).
-2. Set `JAVA_HOME` to the Temurin 21 directory, for example `C:\Program Files\Eclipse Adoptium\jdk-21.0.4.7-hotspot`. Add `%JAVA_HOME%\bin` to `Path`.
+1. Install Eclipse Temurin 25 (Windows x64) from [Adoptium](https://adoptium.net/).
+2. Set `JAVA_HOME` to the Temurin 25 directory, for example `C:\Program Files\Eclipse Adoptium\jdk-25.0.2-hotspot`. Add `%JAVA_HOME%\bin` to `Path`.
 3. Open a new PowerShell window and check Java:
 
    ```powershell
@@ -32,7 +32,7 @@ These steps are written for Windows 10 and 11 using PowerShell. They have not be
    echo $env:JAVA_HOME
    ```
 
-   `java -version` should report version 21.
+   `java -version` should report version 25.
 
 4. Install [Git for Windows](https://git-scm.com/download/win) and confirm `git --version` works in PowerShell.
 5. Clone the repository and move into the project root:
@@ -42,7 +42,7 @@ These steps are written for Windows 10 and 11 using PowerShell. They have not be
    cd Secure-Employee-Management-System-SEMS-
    ```
 
-6. Open that folder in Cursor, or in IntelliJ IDEA and import it as a Maven project. Set the project SDK to Java 21.
+6. Open that folder in Cursor, or in IntelliJ IDEA and import it as a Maven project. Set the project SDK to Java 25.
 7. No environment variables are required. The database file defaults to `data\sems.db` under the project root. To use another file for the current PowerShell window only:
 
    ```powershell
@@ -62,13 +62,13 @@ These steps are written for Windows 10 and 11 using PowerShell. They have not be
 
 ## macOS setup
 
-These steps cover Apple Silicon and Intel Macs. The shell is zsh. They were run on this machine with Temurin 21.0.4.
+These steps cover Apple Silicon and Intel Macs. The shell is zsh. They were run on this machine with Temurin 25.
 
-1. Install Temurin 21 with `brew install --cask temurin@21`, or install the macOS package from [Adoptium](https://adoptium.net/) that matches the chip.
-2. Point `JAVA_HOME` at JDK 21. Add this to `~/.zshrc` if `java -version` does not already report 21:
+1. Install Temurin 25 with `brew install --cask temurin@25`, or install the macOS package from [Adoptium](https://adoptium.net/) that matches the chip.
+2. Point `JAVA_HOME` at JDK 25. Add this to `~/.zshrc` if `java -version` does not already report 25:
 
    ```zsh
-   export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+   export JAVA_HOME=$(/usr/libexec/java_home -v 25)
    export PATH="$JAVA_HOME/bin:$PATH"
    ```
 
@@ -88,7 +88,7 @@ These steps cover Apple Silicon and Intel Macs. The shell is zsh. They were run 
    ```
 
 5. If Git did not keep the executable bit on the wrapper, run `chmod +x mvnw` once.
-6. Open the folder in Cursor or IntelliJ IDEA. Set the project SDK to Java 21.
+6. Open the folder in Cursor or IntelliJ IDEA. Set the project SDK to Java 25.
 7. No environment variables are required. The database file defaults to `data/sems.db` under the project root. To use another file for the current terminal only:
 
    ```zsh

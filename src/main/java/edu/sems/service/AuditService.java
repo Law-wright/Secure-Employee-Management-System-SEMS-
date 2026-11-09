@@ -7,6 +7,9 @@ import edu.sems.domain.AuditOutcome;
 import edu.sems.domain.UserAccount;
 import edu.sems.repository.AuditEventRepository;
 import edu.sems.repository.UserAccountRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,7 +65,14 @@ public class AuditService {
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional(readOnly = true)
     public List<AuditEvent> findAll() {
-        return auditEvents.findAllByOrderByOccurredAtAscIdAsc();
+        return auditEvents.findAllByOrderByOccurredAtDescIdDesc();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional(readOnly = true)
+    public Page<AuditEvent> findPage(Pageable pageable) {
+        Pageable newestFirst = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        return auditEvents.findAllByOrderByOccurredAtDescIdDesc(newestFirst);
     }
 
     private static String currentUsername() {
