@@ -8,13 +8,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+
 @Service
 public class SemsUserDetailsService implements UserDetailsService {
 
     private final UserAccountRepository users;
+    private final Clock clock;
 
-    public SemsUserDetailsService(UserAccountRepository users) {
+    public SemsUserDetailsService(UserAccountRepository users, Clock clock) {
         this.users = users;
+        this.clock = clock;
     }
 
     @Override
@@ -26,6 +30,7 @@ public class SemsUserDetailsService implements UserDetailsService {
                 .password(account.getPasswordHash())
                 .roles(account.getRole().name())
                 .disabled(!account.isActive())
+                .accountLocked(account.isLocked(clock.instant()))
                 .build();
     }
 }
