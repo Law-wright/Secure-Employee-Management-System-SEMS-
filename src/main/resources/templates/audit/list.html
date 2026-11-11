@@ -23,7 +23,7 @@
         </thead>
         <tbody>
         <tr th:each="event : ${events}">
-            <td th:text="${event.occurredAt}">2026-11-03T00:00:00Z</td>
+            <td th:text="${T(edu.sems.web.AuditTimestamps).format(event.occurredAt)}">2026-01-15 12:00:00 CST</td>
             <td th:text="${event.actorUsername != null ? event.actorUsername : '—'}">admin</td>
             <td th:text="${event.eventType}">AUTHENTICATION</td>
             <td th:text="${event.action}">LOGIN</td>

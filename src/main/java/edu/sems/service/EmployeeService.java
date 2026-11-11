@@ -22,7 +22,8 @@ import java.util.regex.Pattern;
 public class EmployeeService {
 
     private static final Pattern USERNAME = Pattern.compile("[A-Za-z0-9_]{3,50}");
-    private static final Pattern EMAIL = Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
+    // Domain labels exclude dots so each character has one way to match (no polynomial backtracking).
+    private static final Pattern EMAIL = Pattern.compile("^[^\\s@]+@[^\\s@.]+(\\.[^\\s@.]+)+$");
 
     private final EmployeeRepository employees;
     private final UserAccountRepository users;

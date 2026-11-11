@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS users (
     active INTEGER NOT NULL DEFAULT 1 CHECK (active IN (0, 1)),
     employee_id INTEGER NOT NULL UNIQUE,
     created_at TEXT NOT NULL,
+    failed_attempts INTEGER NOT NULL DEFAULT 0,
+    locked_until TEXT,
     FOREIGN KEY (employee_id) REFERENCES employees (id)
 );
 

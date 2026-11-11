@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+import java.time.Duration;
 import java.time.Instant;
 
 @Entity
@@ -40,6 +41,12 @@ public class UserAccount {
 
     @Column(name = "created_at", nullable = false)
     private String createdAt;
+
+    @Column(name = "failed_attempts", nullable = false)
+    private int failedAttempts;
+
+    @Column(name = "locked_until")
+    private String lockedUntil;
 
     protected UserAccount() {
     }
@@ -79,5 +86,45 @@ public class UserAccount {
 
     public void deactivate() {
         this.active = false;
+    }
+
+    public int getFailedAttempts() {
+        return failedAttempts;
+    }
+
+    public String getLockedUntil() {
+        return lockedUntil;
+    }
+
+    /** True while the temporary sign-in lock is in force at the given moment. */
+    public boolean isLocked(Instant now) {
+        return lockedUntil != null && now.isBefore(Instant.parse(lockedUntil));
+    }
+
+    /**
+     * Counts one failed sign-in. An expired lock is cleared first, so the count starts again at one.
+     *
+     * @return true when this failure started a new lock
+     */
+    public boolean recordFailedAttempt(int maxAttempts, Duration lockDuration, Instant now) {
+        if (lockedUntil != null && !isLocked(now)) {
+            failedAttempts = 0;
+            lockedUntil = null;
+        }
+        failedAttempts++;
+        if (failedAttempts >= maxAttempts) {
+            lockedUntil = now.plus(lockDuration).toString();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean hasLockoutState() {
+        return failedAttempts > 0 || lockedUntil != null;
+    }
+
+    public void clearFailedAttempts() {
+        failedAttempts = 0;
+        lockedUntil = null;
     }
 }
