@@ -108,14 +108,14 @@ These steps cover Apple Silicon and Intel Macs. The shell is zsh. They were run 
 
 ## Local demo accounts
 
-`./mvnw spring-boot:run` loads the `dev` profile and creates two accounts if they are not already in the local database. Both use the same class demo password: `sems-demo-1`.
+`./mvnw spring-boot:run` loads the `dev` profile and creates two accounts if they are not already in the local database. Both use the same local demo password: `sems-demo-1`.
 
 | Username | Role |
 | --- | --- |
 | `admin` | Administrator |
 | `manager` | Manager |
 
-This password is for the local class database only. Do not reuse it for any personal account, and do not replace it in Git with a password you use anywhere else. The database stores a BCrypt hash in `src/main/resources/data-dev.sql`, not the password itself. Tests do not use these accounts. They create their own users in a temporary database.
+This password is for the local demo database only. Do not reuse it for any personal account, and do not replace it in Git with a password you use anywhere else. The database stores a BCrypt hash in `src/main/resources/data-dev.sql`, not the password itself. Tests do not use these accounts. They create their own users in a temporary database.
 
 A browser request to `http://localhost:8080` redirects to `/login`. A wrong password shows "Invalid username or password." An inactive account shows that same message. After 5 wrong passwords in a row an account is locked for 15 minutes, and the page still shows that same message. After sign-in, the home page shows the username. Log out with the button in the header. An account that opens an administrator page without that role sees "You do not have access to that page." The audit log at `/audit` is administrator-only. It lists sign-in, employee changes, leave decisions, and denied requests, newest first. Times are shown in Central time. Passwords and session ids are not written there.
 
