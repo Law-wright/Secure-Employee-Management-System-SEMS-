@@ -94,4 +94,4 @@ These were checked and are not open gaps: generic login errors, BCrypt storage, 
 
 ## Verification
 
-`./mvnw clean test` on November 10, 2026, JDK 25.0.5: Tests run: 38, Failures: 0, Errors: 0, Skipped: 0.
+`./mvnw clean test` on November 11, 2026, JDK 25.0.5: Tests run: 41, Failures: 0, Errors: 0, Skipped: 0.

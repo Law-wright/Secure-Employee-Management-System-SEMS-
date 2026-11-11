@@ -5,7 +5,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.223 s -- in ed
 -------------------------------------------------------------------------------
 Test set: edu.sems.audit.AuditTests
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.616 s -- in edu.sems.audit.AuditTests
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.610 s -- in edu.sems.audit.AuditTests
 -------------------------------------------------------------------------------
 Test set: edu.sems.audit.AuditTimestampsTest
 -------------------------------------------------------------------------------
@@ -13,28 +13,28 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in ed
 -------------------------------------------------------------------------------
 Test set: edu.sems.auth.AuthenticationTests
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.844 s -- in edu.sems.auth.AuthenticationTests
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.893 s -- in edu.sems.auth.AuthenticationTests
 -------------------------------------------------------------------------------
 Test set: edu.sems.auth.LockoutTests
 -------------------------------------------------------------------------------
-Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.135 s -- in edu.sems.auth.LockoutTests
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.395 s -- in edu.sems.auth.LockoutTests
 -------------------------------------------------------------------------------
 Test set: edu.sems.auth.PasswordEncoderTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.262 s -- in edu.sems.auth.PasswordEncoderTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.223 s -- in edu.sems.auth.PasswordEncoderTest
 -------------------------------------------------------------------------------
 Test set: edu.sems.employee.EmployeeServiceTests
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.635 s -- in edu.sems.employee.EmployeeServiceTests
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.826 s -- in edu.sems.employee.EmployeeServiceTests
 -------------------------------------------------------------------------------
 Test set: edu.sems.leave.LeaveRequestServiceTests
 -------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.822 s -- in edu.sems.leave.LeaveRequestServiceTests
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.852 s -- in edu.sems.leave.LeaveRequestServiceTests
 -------------------------------------------------------------------------------
 Test set: edu.sems.rbac.RbacTests
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.651 s -- in edu.sems.rbac.RbacTests
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.834 s -- in edu.sems.rbac.RbacTests
 
 Results:
 
-Tests run: 38, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 41, Failures: 0, Errors: 0, Skipped: 0

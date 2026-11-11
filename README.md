@@ -1,12 +1,12 @@
 # Secure Employee Management System (SEMS)
 
-SEMS is a local Java web application for managing employee accounts and leave. The project runs from one codebase on macOS and Windows. Sign-in, role checks, administrator employee management, employee leave submission with manager decisions, and an administrator audit log are in place.
+SEMS is a security-focused learning project: it implements access control, authentication hardening, and audit logging, and documents its own threat model. It is a local Java web application for managing employee accounts and leave. The project runs from one codebase on macOS and Windows. Sign-in, role checks, administrator employee management, employee leave submission with manager decisions, and an administrator audit log are in place.
 
 The working directory for every command below is the project root, the folder that contains `pom.xml`.
 
 ## Current status
 
-- macOS: `./mvnw clean test` passed on November 10, 2026 with Temurin 25.0.5 (`Tests run: 38, Failures: 0, Errors: 0, Skipped: 0`), including the new `LockoutTests`. The 16-step browser demonstration recorded here was completed on November 3, 2026 against a fresh database.
+- macOS: `./mvnw clean test` passed on November 11, 2026 with Temurin 25.0.5 (`Tests run: 41, Failures: 0, Errors: 0, Skipped: 0`), including `LockoutTests`. The 16-step browser demonstration recorded here was completed on November 3, 2026 against a fresh database.
 - Do not commit `data/sems.db`, anything else under `data/`, or `target/`. Those are local runtime and build files.
 - Windows: unverified. A Windows 10 or 11 machine still needs to run the commands in the Windows section.
 
@@ -145,6 +145,10 @@ Settings live in `src/main/resources/application.properties`.
 ## Tests
 
 Tests use a temporary SQLite file, not `data/sems.db`. They cover database startup and foreign-key enforcement, password hashing, valid and invalid sign-in, inactive accounts, role rules, employee creation and validation, updates, deactivation, leave submission and date rules, manager decisions, repeated decisions, self-review prevention, forbidden employee approval, sign-in lockout (lock after five wrong passwords, expiry, reset, and unknown or inactive accounts not counted), and the audit log. The audit tests check a successful sign-in, an employee update, a denied administrator page, newest-first ordering, and that the recorded row does not contain the password. Separate tests check that an audit time renders as Central Standard Time in winter and Central Daylight Time in summer. The Surefire summary is saved in `docs/testing/surefire-summary.txt`.
+
+## Security testing
+
+`./mvnw clean test` is the security test run. It checks the controls recorded in `THREAT_MODEL.md`: generic login errors, BCrypt password storage, inactive accounts, lockout after five failed sign-ins, role checks for the employee, audit, and leave-review URLs, self-review prevention, and audit rows that omit the password and session id. `EmployeeServiceTests` also rejects a backtracking-shaped email address within one second. Dependency versions for Tomcat, Jackson, Log4j, and SQLite JDBC are pinned in `pom.xml`. An OWASP Dependency-Check scan is separate from `./mvnw clean test` and uses a local NVD API key that is not committed.
 
 ## Layout
 
