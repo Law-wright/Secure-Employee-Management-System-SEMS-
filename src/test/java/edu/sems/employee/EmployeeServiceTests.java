@@ -15,6 +15,8 @@ import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -22,9 +24,11 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.file.Path;
+import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -108,6 +112,50 @@ class EmployeeServiceTests {
 
         assertThat(employees.count()).isEqualTo(1);
         assertThat(users.count()).isEqualTo(1);
+    }
+
+    @Test
+    void createEmployee_acceptsOrdinaryEmailAddresses() {
+        createEmployee("E3001", "email_user_a", "first.last+tag@sub.example.com");
+        createEmployee("E3002", "email_user_b", "a@b.co");
+
+        assertThat(employees.count()).isEqualTo(2);
+    }
+
+    @Test
+    void createEmployee_malformedEmail_isRejected() {
+        String[] bad = {"a@b..com", "a@.com", "a@b.", "a b@c.com", "a@@b.com", "a@localhost"};
+        int number = 3100;
+        for (String email : bad) {
+            String employeeNumber = "E" + number++;
+            assertThatThrownBy(() -> employeeService.create(
+                    employeeNumber, "Email", "Tester", email, "Analyst",
+                    "tester_" + employeeNumber, INITIAL_PASSWORD, Role.EMPLOYEE))
+                    .as(email)
+                    .isInstanceOf(EmployeeValidationException.class)
+                    .hasMessage("Enter a valid email address.");
+        }
+        assertThat(employees.count()).isZero();
+    }
+
+    @Test
+    void createEmployee_regexBacktrackingEmail_isRejectedQuickly() {
+        // 100 characters is the service's own limit; this shape made the old pattern backtrack quadratically.
+        String hostile = "a@" + ".".repeat(97) + "@";
+        SecurityContext admin = SecurityContextHolder.getContext();
+
+        assertTimeoutPreemptively(Duration.ofSeconds(1), () -> {
+            SecurityContextHolder.setContext(admin);
+            try {
+                assertThatThrownBy(() -> employeeService.create(
+                        "E3200", "Email", "Tester", hostile, "Analyst",
+                        "tester_redos", INITIAL_PASSWORD, Role.EMPLOYEE))
+                        .isInstanceOf(EmployeeValidationException.class)
+                        .hasMessage("Enter a valid email address.");
+            } finally {
+                SecurityContextHolder.clearContext();
+            }
+        });
     }
 
     @Test
