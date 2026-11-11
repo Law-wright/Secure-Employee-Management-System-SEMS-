@@ -21,6 +21,12 @@
     <properties>
         <java.version>25</java.version>
         <thymeleaf-extras-springsecurity6.version>3.1.5.RELEASE</thymeleaf-extras-springsecurity6.version>
+        <!-- Spring Boot 3.5 is past its free support window. These override managed versions
+             to pick up fixes for CVEs reported by OWASP Dependency-Check. -->
+        <tomcat.version>10.1.60</tomcat.version>
+        <jackson-bom.version>2.21.7</jackson-bom.version>
+        <log4j2.version>2.25.5</log4j2.version>
+        <sqlite-jdbc.version>3.53.2.1</sqlite-jdbc.version>
     </properties>
 
     <dependencies>
