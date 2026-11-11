@@ -26,7 +26,7 @@ import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -141,7 +141,7 @@ class EmployeeServiceTests {
         // 100 characters is the service's own limit; this shape made the old pattern backtrack quadratically.
         String hostile = "a@" + ".".repeat(97) + "@";
 
-        assertTimeoutPreemptively(Duration.ofSeconds(1), () ->
+        assertTimeout(Duration.ofSeconds(1), () ->
                 assertThatThrownBy(() -> employeeService.create(
                         "E3200", "Email", "Tester", hostile, "Analyst",
                         "tester_redos", INITIAL_PASSWORD, Role.EMPLOYEE))
