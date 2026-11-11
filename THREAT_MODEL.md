@@ -1,7 +1,7 @@
 # SEMS Threat Model
 
 Method: STRIDE, with a NIST SP 800-53 Rev. 5 control id only where the code matches that control.
-Last reviewed: November 10, 2026 (row 9 updated after lockout was added)
+Last reviewed: November 11, 2026 (dependency findings added after OWASP Dependency-Check)
 
 The file in the repository was empty at the start of this review, so earlier row wording could not be recovered. Rows 1, 2, and 8 are the claims that were still visible in this file before it was cleared (generic login error, BCrypt storage, audit rows omit passwords and session ids). Rows 4 and 9 are the object-level and lockout items this review was asked to settle. Rows marked **new** were added from the code. No `[verify]` tags remain.
 
@@ -59,8 +59,28 @@ From `pom.xml` and the November 9, 2026 test run:
 | 12 | Information disclosure | **new.** An error response includes a stack trace or the rejected password | `server.error.include-stacktrace=never`. The login error page does not print the submitted password (`AuthenticationTests`). | SI-11 |
 | 13 | Tampering | **new.** Stored name, title, or leave reason is rendered as HTML | Audit, employee, leave, and profile templates print values with `th:text`. There is no `th:utext` under `src/main`. | SI-10 |
 
+## Dependency findings (OWASP Dependency-Check, November 11, 2026)
+
+Spring Boot 3.5.16 reached end of its free support window on June 30, 2026, so some managed dependencies no longer get free patch releases. A first scan reported 61 CVEs. Version overrides in `pom.xml` for Tomcat (10.1.60), Jackson (2.21.7), Log4j (2.25.5) and sqlite-jdbc (3.53.2.1) cut that to 34. Overriding Spring Framework to 6.2.20 and Spring Security to 6.5.12 was tried and could not be resolved, so those versions are not available to this build.
+
+"Not used" means a search of `src/main` found no use of the affected feature. Each row was checked against the code, not only against the CVE title. SEMS is a local application, so no row is rated above low residual risk, but this is a judgment about this deployment and not a statement that the CVEs are harmless.
+
+| Component | CVEs | Affected feature | Used by SEMS? | Decision |
+| --- | --- | --- | --- | --- |
+| spring-core 6.2.19 | 14 CVEs (5 critical, 5 high, 3 medium, 1 low) | WebFlux, RSocket, Jetty 12 reactive adapter, XSLT views, FreeMarker, functional endpoints, server-sent events, WebSocket, multipart parts, Aalto XML, UrlHandlerFilter, UrlFileNameViewController, Content-Disposition from untrusted input, user-supplied SpEL | Not used. SEMS uses Spring MVC, Thymeleaf, and Tomcat only. | Accepted. Not applicable. |
+| spring-core 6.2.19 | CVE-2026-59282 (high) | Data binding applies user-supplied property paths, causing denial of service | Partly. Forms bind through `@ModelAttribute` to fixed form classes. | Accepted. Impact is availability only, on a local app. |
+| spring-core 6.2.19 | CVE-2026-59281 (medium) | XSS when rendering `Errors.getFieldErrors()` with no arguments | Not used. Templates use `th:errors`, and no code calls `getFieldError`. | Accepted. Not applicable. |
+| spring-core 6.2.19 | CVE-2026-59283 (critical) | SpEL `SimpleEvaluationContext` guard bypass with the SpEL compiler | Not used. No SpEL is evaluated from user input. | Accepted. Not applicable. |
+| spring-security-core 6.5.11 | CVE-2026-59270 (critical), 41707, 47841, 47842 | Embedded LDAP server, DPoP proofs, WebAuthn, `AesBytesEncryptor` | Not used. | Accepted. Not applicable. |
+| spring-security-core 6.5.11 | CVE-2026-59276 (medium) | Security-sensitive values compared without constant time | Possibly, inside the framework. Exploiting it needs many timed requests. | Accepted. Low residual risk on a local app. |
+| spring-data-jpa 3.5.13 | CVE-2026-47834 (medium) | Sort validation bypass when sort parameters come from untrusted input | Not exposed. Queries use fixed sort orders, and no controller passes a user-supplied sort. `findPage(Pageable)` exists but is called only from tests. | Accepted. Do not pass user-supplied sort parameters to it. |
+| sqlite-jdbc 3.53.2.1 | 11 CVEs, fixed in SQLite 3.54.0 or later | FTS5, FTS3/4, R-Tree and session extensions, stack exhaustion from CTE nesting, command-line shell | The schema has no virtual tables. Queries are static JPQL with bound parameters. An attacker would need to supply SQL or a crafted database file. The shell issue does not affect a JDBC driver. | Accepted. Upgrade when a driver bundling SQLite 3.54.0 or later is available. |
+
+Long-term fix: migrate to a supported Spring Boot line (4.x), which moves Spring Framework, Spring Security and Spring Data to patched releases. This is a larger change because the Hibernate SQLite dialect and the Thymeleaf integration must be rechecked.
+
 ## Known gaps
 
+- The application runs on Spring Boot 3.5, which is past its free support window. 34 dependency CVEs remain open and are assessed in the dependency findings above. A migration to a supported line is the long-term fix.
 - Lockout is per account, not per address (row 9). Someone who knows a username can keep that account locked by repeating failed sign-ins every 15 minutes. There is no administrator unlock.
 - No object-level ownership beyond the signed-in user's profile and own leave list (row 4). Every manager can decide every other employee's pending request. There are no departments.
 - No TLS, and the session cookie is not marked Secure (row 10). This matches a localhost demo and does not protect a shared network.
