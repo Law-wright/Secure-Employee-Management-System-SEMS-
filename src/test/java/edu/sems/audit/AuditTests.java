@@ -33,9 +33,12 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -189,6 +192,20 @@ class AuditTests {
         assertThat(oldest).isGreaterThan(newest);
         assertThat(page).doesNotContain("2026-01-15T18:00:00Z");
         assertThat(page).doesNotContain("2026-07-15T17:00:00Z");
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    void xssUsernameIsEscapedInAuditLog() throws Exception {
+        mockMvc.perform(post("/login")
+                        .param("username", "<script>alert(1)</script>")
+                        .param("password", "x")
+                        .with(csrf()));
+
+        mockMvc.perform(get("/audit"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(not(containsString("<script>alert(1)</script>"))))
+                .andExpect(content().string(containsString("&lt;script&gt;")));
     }
 
     @Test

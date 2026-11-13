@@ -92,6 +92,16 @@ class AuthenticationTests {
     }
 
     @Test
+    void sqlInjectionLoginPayloadIsRejected() throws Exception {
+        mockMvc.perform(post("/login")
+                        .param("username", "' OR '1'='1")
+                        .param("password", "x")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error"));
+    }
+
+    @Test
     void inactiveAccount_isRejected() throws Exception {
         mockMvc.perform(post("/login")
                         .param("username", "inactive")

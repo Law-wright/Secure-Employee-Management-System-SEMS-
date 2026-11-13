@@ -29,8 +29,12 @@ import java.time.Duration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -185,6 +189,26 @@ class EmployeeServiceTests {
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login?error"));
+    }
+
+    @Test
+    void xssPayloadIsEscapedInEmployeeList() throws Exception {
+        mockMvc.perform(post("/employees")
+                        .param("employeeNumber", "E9001")
+                        .param("firstName", "<script>alert(1)</script>")
+                        .param("lastName", "Tester")
+                        .param("email", "xss@sems.test")
+                        .param("jobTitle", "Analyst")
+                        .param("username", "xss_user")
+                        .param("password", INITIAL_PASSWORD)
+                        .param("role", "EMPLOYEE")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection());
+
+        mockMvc.perform(get("/employees"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(not(containsString("<script>alert(1)</script>"))))
+                .andExpect(content().string(containsString("&lt;script&gt;")));
     }
 
     private Employee createEmployee(String employeeNumber, String username, String email) {
