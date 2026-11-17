@@ -6,7 +6,7 @@ The working directory for every command below is the project root, the folder th
 
 ## Current status
 
-- macOS: `./mvnw clean test` passed on November 11, 2026 with Temurin 25.0.5 (`Tests run: 41, Failures: 0, Errors: 0, Skipped: 0`), including `LockoutTests`. The 16-step browser demonstration recorded here was completed on November 3, 2026 against a fresh database.
+- macOS: `./mvnw clean test` passed on November 16, 2026 with Temurin 25.0.5 (`Tests run: 44, Failures: 0, Errors: 0, Skipped: 0`), including `LockoutTests`. The 16-step browser demonstration recorded here was completed on November 3, 2026 against a fresh database.
 - Do not commit `data/sems.db`, anything else under `data/`, or `target/`. Those are local runtime and build files.
 - Windows: unverified. A Windows 10 or 11 machine still needs to run the commands in the Windows section.
 
