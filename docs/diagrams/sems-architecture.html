@@ -72,12 +72,12 @@
   <div class="frame">
     <p class="eyebrow">Architecture · Diagram Design</p>
     <h1>SEMS runtime</h1>
-    <p class="note">One Spring Boot process on port 8080. The browser signs in through form login, Thymeleaf pages call the employee and leave services, and both those services and the login path append to the audit log. The database is the SQLite file at data/sems.db.</p>
+    <p class="note">One Spring Boot process on port 8080. The browser signs in through form login. A failed sign-in is counted on the account and can lock it for 15 minutes; a successful sign-in clears that count. Thymeleaf pages call the employee and leave services. Sign-in results and those changes are appended to the audit log. The database is the SQLite file at data/sems.db.</p>
 
     <div class="diagram-container">
       <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="sems-arch-title sems-arch-desc">
         <title id="sems-arch-title">SEMS runtime</title>
-        <desc id="sems-arch-desc">Architecture of the SEMS Spring Boot app: the browser passes Spring Security, then Thymeleaf and services, with audit and SQLite beside the request path.</desc>
+        <desc id="sems-arch-desc">Architecture of the SEMS Spring Boot app: the browser passes Spring Security, including sign-in lockout, then Thymeleaf and services, with audit and SQLite beside the request path.</desc>
         <defs>
           <marker id="sems-arch-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
           <marker id="sems-arch-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
@@ -123,7 +123,7 @@
         <rect x="220" y="168" width="144" height="72" rx="6" fill="#ffffff"/>
         <rect x="220" y="168" width="144" height="72" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1"/>
         <text x="292" y="198" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Security</text>
-        <text x="292" y="216" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Form login · roles</text>
+        <text x="292" y="216" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Login · lockout</text>
 
         <rect x="412" y="168" width="136" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
         <text x="480" y="198" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Web</text>
