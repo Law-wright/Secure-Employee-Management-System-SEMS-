@@ -37,6 +37,28 @@ header {
     text-decoration: none;
 }
 
+.brand,
+.login-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.04em;
+}
+
+.logo-mark {
+    height: 1.6em;
+    width: auto;
+    flex: none;
+}
+
+.login-brand {
+    color: var(--accent);
+}
+
+.login-brand .logo-mark {
+    height: 1.3em;
+}
+
 nav {
     display: flex;
     align-items: center;

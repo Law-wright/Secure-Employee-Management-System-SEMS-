@@ -7,7 +7,7 @@
 </head>
 <body>
 <main class="narrow">
-    <h1>SEMS</h1>
+    <h1 class="login-brand"><svg th:replace="~{fragments/logo :: mark}"></svg><span>SEMS</span></h1>
     <p class="lede">Sign in to the Secure Employee Management System.</p>
     <p class="message error" th:if="${param.error}">Invalid username or password.</p>
     <p class="message" th:if="${param.logout}">You have been signed out.</p>

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <header th:fragment="header">
-    <a class="brand" th:href="@{/}">SEMS</a>
+    <a class="brand" th:href="@{/}"><svg th:replace="~{fragments/logo :: mark}"></svg><span>SEMS</span></a>
     <nav sec:authorize="isAuthenticated()">
         <a th:href="@{/profile}">Profile</a>
         <a th:href="@{/leave/mine}">My leave</a>
