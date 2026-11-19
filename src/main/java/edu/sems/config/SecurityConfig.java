@@ -1,6 +1,8 @@
 package edu.sems.config;
 
 import edu.sems.security.AuditAccessDeniedHandler;
+import edu.sems.security.LoginFailureHandler;
+import edu.sems.security.LoginSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -16,19 +18,23 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http, AuditAccessDeniedHandler auditAccessDeniedHandler)
+    SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            AuditAccessDeniedHandler auditAccessDeniedHandler,
+            LoginFailureHandler loginFailureHandler,
+            LoginSuccessHandler loginSuccessHandler)
             throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/access-denied").permitAll()
+                        .requestMatchers("/login", "/login/status", "/css/**", "/js/**", "/access-denied").permitAll()
                         .requestMatchers("/employees", "/employees/**").hasRole("ADMIN")
                         .requestMatchers("/audit", "/audit/**").hasRole("ADMIN")
                         .requestMatchers("/leave/review", "/leave/review/**").hasRole("MANAGER")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/", false)
-                        .failureUrl("/login?error")
+                        .successHandler(loginSuccessHandler)
+                        .failureHandler(loginFailureHandler)
                         .permitAll())
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")

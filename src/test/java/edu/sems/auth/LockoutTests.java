@@ -117,15 +117,15 @@ class LockoutTests {
     }
 
     @Test
-    void lockedAccount_showsTheSameGenericMessage() throws Exception {
+    void lockedAccount_withoutTheAttemptSession_staysGeneric() throws Exception {
         failTimes("ada", LIMIT);
         mockMvc.perform(login("ada", AccountFixtures.PASSWORD)).andExpect(redirectedUrl("/login?error"));
 
         mockMvc.perform(get("/login").param("error", ""))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Invalid username or password.")))
-                .andExpect(content().string(not(containsString("locked"))))
-                .andExpect(content().string(not(containsString("Locked"))));
+                .andExpect(content().string(not(containsString("This account has been locked out."))))
+                .andExpect(content().string(not(containsString("attempts remaining"))));
     }
 
     @Test

@@ -9,7 +9,17 @@
 <main class="narrow">
     <h1 class="login-brand"><svg th:replace="~{fragments/logo :: mark}"></svg><span>SEMS</span></h1>
     <p class="lede">Sign in to the Secure Employee Management System.</p>
-    <p class="message error" th:if="${param.error}">Invalid username or password.</p>
+    <div id="login-feedback"
+         th:attr="data-locked=${attempt.locked},data-locked-until=${attempt.lockedUntil},data-server-now=${attempt.serverNow}">
+        <p id="login-announcer" class="visually-hidden" role="status" aria-live="polite"></p>
+        <p class="message error" role="alert" th:if="${param.error != null and !attempt.locked}">Invalid username or password.</p>
+        <div id="lockout-notice" class="message error" th:if="${attempt.locked}">
+            <p id="lockout-status" role="status" aria-live="polite">This account has been locked out.</p>
+            <p id="lockout-timer">Time remaining: <span id="lockout-countdown" th:text="${attempt.countdownText}">15 minutes 0 seconds</span>.</p>
+        </div>
+        <p id="attempts-remaining" class="message error" role="status" aria-live="polite"
+           th:if="${attempt.showRemainingAttempts}" th:text="${attempt.remainingMessage}">3 login attempts remaining.</p>
+    </div>
     <p class="message" th:if="${param.logout}">You have been signed out.</p>
     <form class="stack" th:action="@{/login}" method="post">
         <label for="username">Username</label>
@@ -19,5 +29,6 @@
         <button type="submit">Sign in</button>
     </form>
 </main>
+<script th:src="@{/js/login-feedback.js}"></script>
 </body>
 </html>

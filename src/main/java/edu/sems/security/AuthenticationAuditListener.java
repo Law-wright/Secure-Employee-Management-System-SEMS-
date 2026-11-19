@@ -8,6 +8,7 @@ import edu.sems.service.LoginAttemptService;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
+import org.springframework.security.authentication.event.AuthenticationFailureDisabledEvent;
 import org.springframework.security.authentication.event.AuthenticationFailureLockedEvent;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.authentication.event.LogoutSuccessEvent;
@@ -48,7 +49,9 @@ public class AuthenticationAuditListener {
                 AuditAction.LOGIN_FAILED,
                 AuditOutcome.FAILURE,
                 refusedByLock ? "Sign-in refused: account locked" : "Sign-in failed");
-        if (event instanceof AuthenticationFailureBadCredentialsEvent
+        boolean countsTowardLockout = event instanceof AuthenticationFailureBadCredentialsEvent
+                || event instanceof AuthenticationFailureDisabledEvent;
+        if (countsTowardLockout
                 && username != null
                 && loginAttempts.recordFailure(username)) {
             auditService.record(

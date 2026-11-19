@@ -152,6 +152,23 @@ nav button {
     border-color: #f3c7c7;
 }
 
+.message.error p {
+    color: inherit;
+    margin: 0.15rem 0;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .field-error {
     display: block;
     margin-top: 0.2rem;
