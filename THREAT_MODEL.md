@@ -1,7 +1,7 @@
 # SEMS Threat Model
 
 Method: STRIDE, with a NIST SP 800-53 Rev. 5 control id only where the code matches that control.
-Last reviewed: November 16, 2026. Dependency findings below are still the November 11, 2026 OWASP Dependency-Check scan.
+Last reviewed: November 20, 2026. Dependency findings below are still the November 11, 2026 OWASP Dependency-Check scan.
 
 The file in the repository was empty at the start of this review, so earlier row wording could not be recovered. Rows 1, 2, and 8 are the claims that were still visible in this file before it was cleared (generic login error, BCrypt storage, audit rows omit passwords and session ids). Rows 4 and 9 are the object-level and lockout items this review was asked to settle. Rows marked **new** were added from the code. No `[verify]` tags remain.
 
@@ -33,7 +33,7 @@ SEMS is a local web application for employee accounts and leave. A browser talks
 
 ## Stack
 
-From `pom.xml` and the November 16, 2026 test run:
+From `pom.xml` and the November 20, 2026 test run:
 
 - Java 25 (`java.version` is 25). The suite ran on JDK 25.0.5.
 - Spring Boot 3.5.16 (web, Thymeleaf, Security, validation, data JPA).
@@ -94,4 +94,4 @@ These were checked and are not open gaps: generic login errors, a SQL-fragment u
 
 ## Verification
 
-`./mvnw clean test` on November 16, 2026, JDK 25.0.5: Tests run: 44, Failures: 0, Errors: 0, Skipped: 0. The Surefire summary is `docs/testing/surefire-summary.txt`.
+`./mvnw clean test` on November 20, 2026, JDK 25.0.5: Tests run: 49, Failures: 0, Errors: 0, Skipped: 0. The five tests added since the November 16 run are `LoginFeedbackTests`: the attempts notice, the lockout countdown, and the same notices for a username that is not an active account. The Surefire summary is `docs/testing/surefire-summary.txt`.

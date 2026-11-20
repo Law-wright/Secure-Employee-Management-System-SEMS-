@@ -6,7 +6,7 @@ The working directory for every command below is the project root, the folder th
 
 ## Current status
 
-- macOS: `./mvnw clean test` passed on November 16, 2026 with Temurin 25.0.5 (`Tests run: 44, Failures: 0, Errors: 0, Skipped: 0`), including `LockoutTests`. The 16-step browser demonstration recorded here was completed on November 3, 2026 against a fresh database.
+- macOS: `./mvnw clean test` passed on November 20, 2026 with Temurin 25.0.5 (`Tests run: 49, Failures: 0, Errors: 0, Skipped: 0`), including `LockoutTests` and `LoginFeedbackTests`. The 16-step browser demonstration recorded here was completed on November 3, 2026 against a fresh database.
 - Do not commit `data/sems.db`, anything else under `data/`, or `target/`. Those are local runtime and build files.
 - Windows: unverified. A Windows 10 or 11 machine still needs to run the commands in the Windows section.
 
@@ -117,6 +117,8 @@ These steps cover Apple Silicon and Intel Macs. The shell is zsh. They were run 
 
 This password is for the local demo database only. Do not reuse it for any personal account, and do not replace it in Git with a password you use anywhere else. The database stores a BCrypt hash in `src/main/resources/data-dev.sql`, not the password itself. Tests do not use these accounts. They create their own users in a temporary database.
 
+`./demo/reset-demo.sh` rebuilds a separate local presentation database from `demo/demo-seed.sql`. It keeps the same demo password and adds more employees, leave requests, and audit rows. Account names and what each one is for are in `demo/README.md`. Stop the application before running the script.
+
 A browser request to `http://localhost:8080` redirects to `/login`. A wrong password shows "Invalid username or password." An inactive account shows that same message. Once 3 or fewer attempts remain, the page also shows how many are left. After 5 wrong passwords in a row an account is locked for 15 minutes. The page then says the account is locked out and counts down the time remaining while it stays open. When the lock ends, that notice clears and sign-in can be tried again. Unknown usernames see the same notices. After sign-in, the home page shows the username. Log out with the button in the header. An account that opens an administrator page without that role sees "You do not have access to that page." The audit log at `/audit` is administrator-only. It lists sign-in, employee changes, leave decisions, and denied requests, newest first. Times are shown in Central time. Passwords and session ids are not written there.
 
 ## Configuration
@@ -155,7 +157,7 @@ Tests use a temporary SQLite file, not `data/sems.db`. They cover database start
 - `src/main/java/edu/sems/` — application code
 - `src/main/resources/schema.sql` — tables `employees`, `users`, `leave_requests`, and `audit_events`
 - `src/test/java/edu/sems/` — JUnit 5 tests
-- `docs/diagrams/` — domain class diagram, application-layer class diagram, and runtime architecture
+- `docs/diagrams/` — current-state diagrams, listed in `docs/diagrams/sems-diagrams.html`: runtime architecture, sign-in and leave-review sequences, leave and lockout state machines, the domain class diagram, and submit and review activities. Older pages `sems-architecture.html`, `sems-domain-uml.html`, and `sems-layers-uml.html` are still in that folder.
 - `docs/testing/` — recorded Surefire test summary
 - `THREAT_MODEL.md` — STRIDE threat model for this application
 - `data/` — created at startup, not committed
