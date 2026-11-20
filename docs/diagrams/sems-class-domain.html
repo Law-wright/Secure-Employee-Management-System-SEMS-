@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEMS domain classes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Serif:ital@0;1&family=Noto+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@400&family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper: #f5f5f5; --color-ink: #2d3142; --color-muted: #4f5d75; --color-accent: #bf4520;
+      --font-sans: 'Geist', system-ui, sans-serif; --font-serif: 'Instrument Serif', serif; --font-mono: 'Geist Mono', ui-monospace, monospace;
+    }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1240px; width: 100%; min-width: 0; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 1040px; display: block; }
+    @media print { .diagram-container { overflow-x: visible; } svg { min-width: 0; } }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">UML class · domain</p>
+    <h1>SEMS domain classes</h1>
+    <div class="diagram-container">
+      <svg viewBox="0 0 1040 680" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="sems-class-domain-title sems-class-domain-desc">
+        <title id="sems-class-domain-title">SEMS domain classes</title>
+        <desc id="sems-class-domain-desc">Each employee has one user account and many leave requests. A manager account reviews leave. Audit events store an actor id and do not hold a user object.</desc>
+        <defs>
+          <marker id="uml-triangle" markerWidth="16" markerHeight="12" refX="15" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+            <polygon points="0 0, 16 6, 0 12" fill="#f5f5f5" stroke="#2d3142" stroke-width="1"/>
+          </marker>
+          <marker id="uml-diamond-filled" markerWidth="18" markerHeight="10" refX="0" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+            <polygon points="0 5, 9 0, 18 5, 9 10" fill="#2d3142"/>
+          </marker>
+          <marker id="uml-diamond-hollow" markerWidth="18" markerHeight="10" refX="0" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+            <polygon points="0 5, 9 0, 18 5, 9 10" fill="#f5f5f5" stroke="#2d3142" stroke-width="1"/>
+          </marker>
+          <marker id="uml-open" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M0,0 L9,4 L0,8" fill="none" stroke="#4f5d75" stroke-width="1"/>
+          </marker>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+        <!-- Employee 1 — 1 UserAccount -->
+        <line x1="336" y1="128" x2="448" y2="128" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#uml-open)"/>
+        <!-- LeaveRequest * — 1 Employee -->
+        <line x1="160" y1="320" x2="160" y2="232" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#uml-open)"/>
+        <!-- reviewer -->
+        <path d="M 300,320 V 284 H 612 Q 620,284 620,276 V 248" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#uml-open)"/>
+        <!-- audit actor id -->
+        <line x1="720" y1="360" x2="720" y2="248" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#uml-open)"/>
+
+        <rect x="360" y="108" width="64" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="392" y="117" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">ACCOUNT</text>
+        <rect x="344" y="136" width="20" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="354" y="145" fill="#4f5d75" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">1</text>
+        <rect x="420" y="136" width="20" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="430" y="145" fill="#4f5d75" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">1</text>
+
+        <rect x="168" y="260" width="72" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="204" y="269" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">REQUESTS</text>
+        <rect x="172" y="236" width="20" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="182" y="245" fill="#4f5d75" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">1</text>
+        <rect x="172" y="300" width="28" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="186" y="309" fill="#4f5d75" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">0..*</text>
+
+        <rect x="420" y="264" width="72" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="456" y="273" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">REVIEWER</text>
+        <rect x="308" y="292" width="28" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="322" y="301" fill="#4f5d75" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">0..*</text>
+        <rect x="560" y="256" width="36" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="578" y="265" fill="#4f5d75" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle">0..1</text>
+
+        <rect x="640" y="290" width="72" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="676" y="299" fill="#5a6580" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.06em">ACTOR ID</text>
+
+        <!-- Employee -->
+        <rect x="36" y="36" width="300" height="196" rx="6" fill="#f5f5f5"/>
+        <rect x="36" y="36" width="300" height="196" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <line x1="36" y1="76" x2="336" y2="76" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <line x1="36" y1="174" x2="336" y2="174" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <text x="186" y="60" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">Employee</text>
+        <text x="48" y="96" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- employeeNumber: String</text>
+        <text x="48" y="112" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- name: String</text>
+        <text x="48" y="128" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- email: String</text>
+        <text x="48" y="144" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- jobTitle: String</text>
+        <text x="48" y="160" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- status: EmployeeStatus</text>
+        <text x="48" y="194" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">+ update(name, email, title): void</text>
+        <text x="48" y="210" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">+ deactivate(): void</text>
+
+        <!-- UserAccount focal -->
+        <rect x="448" y="36" width="340" height="212" rx="6" fill="#f5f5f5"/>
+        <rect x="448" y="36" width="340" height="212" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.4"/>
+        <line x1="448" y1="76" x2="788" y2="76" stroke="rgba(191,69,32,0.40)" stroke-width="1"/>
+        <line x1="448" y1="174" x2="788" y2="174" stroke="rgba(191,69,32,0.40)" stroke-width="1"/>
+        <text x="618" y="60" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">UserAccount</text>
+        <text x="460" y="96" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- username: String</text>
+        <text x="460" y="112" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- passwordHash: String</text>
+        <text x="460" y="128" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- role: Role</text>
+        <text x="460" y="144" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- active: boolean</text>
+        <text x="460" y="160" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- failedAttempts: int</text>
+        <text x="460" y="194" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">+ isLocked(now): boolean</text>
+        <text x="460" y="210" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">+ recordFailedAttempt(): boolean</text>
+        <text x="460" y="226" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">+ clearFailedAttempts(): void</text>
+
+        <!-- LeaveRequest -->
+        <rect x="36" y="320" width="340" height="188" rx="6" fill="#f5f5f5"/>
+        <rect x="36" y="320" width="340" height="188" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <line x1="36" y1="360" x2="376" y2="360" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <line x1="36" y1="458" x2="376" y2="458" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <text x="206" y="344" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">LeaveRequest</text>
+        <text x="48" y="380" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- startDate: LocalDate</text>
+        <text x="48" y="396" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- endDate: LocalDate</text>
+        <text x="48" y="412" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- reason: String</text>
+        <text x="48" y="428" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- status: LeaveStatus</text>
+        <text x="48" y="444" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- reviewedAt: String</text>
+        <text x="48" y="478" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">+ approve(reviewer): void</text>
+        <text x="48" y="494" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">+ reject(reviewer): void</text>
+
+        <!-- AuditEvent -->
+        <rect x="448" y="360" width="340" height="148" rx="6" fill="#f5f5f5"/>
+        <rect x="448" y="360" width="340" height="148" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <line x1="448" y1="400" x2="788" y2="400" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <text x="618" y="384" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', system-ui, sans-serif" text-anchor="middle">AuditEvent</text>
+        <text x="460" y="420" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- occurredAt: String</text>
+        <text x="460" y="436" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- actorUsername: String</text>
+        <text x="460" y="452" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- eventType: AuditEventType</text>
+        <text x="460" y="468" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- action: AuditAction</text>
+        <text x="460" y="484" fill="#4f5d75" font-size="9" font-family="'Geist Mono', ui-monospace, monospace">- outcome: AuditOutcome</text>
+
+        <line x1="36" y1="560" x2="1004" y2="560" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <text x="36" y="580" fill="#4f5d75" font-size="8" font-family="'Geist Mono', ui-monospace, monospace" letter-spacing="0.14em">LEGEND</text>
+        <line x1="36" y1="608" x2="64" y2="608" stroke="#2d3142" stroke-width="1" marker-end="url(#uml-triangle)"/>
+        <text x="72" y="612" fill="#4f5d75" font-size="8" font-family="'Geist', system-ui, sans-serif">Inheritance</text>
+        <line x1="180" y1="608" x2="208" y2="608" stroke="#2d3142" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#uml-triangle)"/>
+        <text x="216" y="612" fill="#4f5d75" font-size="8" font-family="'Geist', system-ui, sans-serif">Realization</text>
+        <line x1="324" y1="608" x2="352" y2="608" stroke="#2d3142" stroke-width="1" marker-start="url(#uml-diamond-filled)"/>
+        <text x="360" y="612" fill="#4f5d75" font-size="8" font-family="'Geist', system-ui, sans-serif">Composition</text>
+        <line x1="468" y1="608" x2="496" y2="608" stroke="#2d3142" stroke-width="1" marker-start="url(#uml-diamond-hollow)"/>
+        <text x="504" y="612" fill="#4f5d75" font-size="8" font-family="'Geist', system-ui, sans-serif">Aggregation</text>
+        <line x1="612" y1="608" x2="640" y2="608" stroke="#4f5d75" stroke-width="1" marker-end="url(#uml-open)"/>
+        <text x="648" y="612" fill="#4f5d75" font-size="8" font-family="'Geist', system-ui, sans-serif">Association</text>
+        <line x1="756" y1="608" x2="784" y2="608" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#uml-open)"/>
+        <text x="792" y="612" fill="#4f5d75" font-size="8" font-family="'Geist', system-ui, sans-serif">Dependency</text>
+        <text x="36" y="644" fill="#4f5d75" font-size="8" font-family="'Geist', system-ui, sans-serif">This diagram uses association and dependency. Employee moves from active to inactive only through deactivate.</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

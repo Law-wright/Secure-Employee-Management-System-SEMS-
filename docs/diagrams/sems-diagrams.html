@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEMS current-state diagrams</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Geist', system-ui, sans-serif;
+      background: #f5f5f5;
+      color: #2d3142;
+      padding: 3rem 2rem 4rem;
+    }
+    .frame { max-width: 720px; margin: 0 auto; }
+    .eyebrow {
+      font-family: 'Geist Mono', ui-monospace, monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #4f5d75;
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: 'Instrument Serif', serif;
+      font-weight: 400;
+      font-size: 2rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+    p { color: #4f5d75; line-height: 1.5; margin-bottom: 1.5rem; }
+    ul { list-style: none; }
+    li { margin: 0 0 0.85rem; }
+    a { color: #2d3142; }
+    span {
+      display: block;
+      font-family: 'Geist Mono', ui-monospace, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #4f5d75;
+      margin-bottom: 0.15rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Current state</p>
+    <h1>SEMS diagrams</h1>
+    <p>Drawn from the code as it stands. The three older pages in this folder are unchanged.</p>
+    <ul>
+      <li><span>Architecture</span><a href="sems-architecture-current.html">Runtime architecture</a></li>
+      <li><span>Sequence</span><a href="sems-sequence-login.html">Sign-in</a></li>
+      <li><span>Sequence</span><a href="sems-sequence-leave.html">Leave review</a></li>
+      <li><span>State</span><a href="sems-state-leave.html">Leave request</a></li>
+      <li><span>State</span><a href="sems-state-lockout.html">Sign-in lockout</a></li>
+      <li><span>Class</span><a href="sems-class-domain.html">Domain classes</a></li>
+      <li><span>Activity</span><a href="sems-activity-submit.html">Submit leave</a></li>
+      <li><span>Activity</span><a href="sems-activity-review.html">Review leave</a></li>
+    </ul>
+  </div>
+</body>
+</html>
